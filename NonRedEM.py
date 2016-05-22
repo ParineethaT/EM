@@ -6,7 +6,7 @@ from pyspark.sql import HiveContext, Row, Window
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
-if len(sys.argv) != 3:                                                                          #O(1)
+if len(sys.argv) != 3:
 	
 	print(""" 
 		Error: This program takes 2 arguments
@@ -24,7 +24,7 @@ def attr_key(l):
 		[obj, attr1, attr2, attr3 ...] -> [(attr1, obj), (attr2, obj), (attr3, obj) ...]
 	"""
 	a = []
-	for attr in l[1:]:                                                                               O(n* num of attributes)
+	for attr in l[1:]:
 		a.append(Row(attr=attr, obj=l[0]))
 	return a
 
@@ -35,7 +35,7 @@ def attr_key(l):
 inRDD = sc.textFile(sys.argv[1])
 
 ##Generating attribute-object pair from each line
-aoPair = inRDD.flatMap(lambda line: attr_key(line.split("\t")))                                      # O(N* num of attributes)
+aoPair = inRDD.flatMap(lambda line: attr_key(line.split("\t")))
 
 
 ##Converting to Dataframe
@@ -56,7 +56,7 @@ aoPair = inRDD.flatMap(lambda line: attr_key(line.split("\t")))                 
 	+----+---+
 """
 
-schema = StructType([StructField("attr", StringType(), True), StructField("obj", StringType(), True)])      #O(1)
+schema = StructType([StructField("attr", StringType(), True), StructField("obj", StringType(), True)])
 
 aoDF = sqlCtx.createDataFrame(aoPair, schema)
 
